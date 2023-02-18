@@ -1,0 +1,77 @@
+<head>
+    <title></title>
+    <script src="../jquery-3.6.3.min.js"></script>
+    <script src="../knockout-min.js"></script>
+</head>
+
+<div>
+    <h2>Maintain Products</h2>
+    <div class="caption"><b>Product Number</b></div>
+    <input id="empName" data-bind="value: productNumber" class="text"></input><br />
+    <div class="caption">Product Description </div>
+    <input id="empSal" data-bind="value: productDescription" class="text" /><br />
+    <div class="caption">Weight Per Unit Of Measure</div>
+    <input id="empSal" data-bind="value: weight" class="text" /><br />
+    <div class="caption">List Price</div>
+    <input id="empSal" data-bind="value: listPrice" class="text" /><br />
+    <div class="caption">Country Of Origin</div>
+    <input id="empSal" data-bind="value: countryOfOrigin" class="text" /><br />
+    <label><input type="radio" name="myRadio" value=" Bicycle(100)" data-bind="checked: selectedOption" />
+        Bicycle(100)</label>
+    <label><input type="radio" name="myRadio" value="Accessories(200)" data-bind="checked: selectedOption" />
+        Accessories(200)</label>
+    <label><input type="radio" name="myRadio" value="Clothing(300)" data-bind="checked: selectedOption" />
+        Clothing(300)</label><br>
+
+    <div>Active Product : <input value="yes" type="checkbox" data-bind="checked: ActiveProduct" /></div><br>
+
+    <p>
+        Destination country:
+        <select data-bind="options: availableCountries, optionsCaption: 'Choose...'"></select>
+    </p>
+
+    <div>
+<textarea name="txtarea" cols="30" rows="10" data-bind="textArea: txtarea"></textarea>    </div>
+
+
+    <input type="button" data-bind="click:saveToJson" value="Accept" />
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // viewmodel
+        let product = {
+            productNumber: ko.observable(),
+            productDescription: ko.observable(),
+            weight: ko.observable(),
+            listPrice: ko.observable(),
+            countryOfOrigin: ko.observable(),
+            selectedOption: ko.observable(),
+            ActiveProduct: ko.observableArray(),
+            txtarea: ko.observable(),
+            availableCountries: ko.observableArray(['France', 'Germany', 'Spain'])
+
+
+
+        };
+        // employee.empName.subscribe(function (newValue) {
+        //     console.log(newValue);
+        // });
+        product.saveToJson = function () {
+            const jsonData = ko.toJSON(product);
+            const promise = fetch("http://localhost:3000/products", {
+                method: 'post',
+                body: jsonData,
+                headers: {
+                    'content-type': 'application/json'
+                }
+            });
+
+            $("#result").text(jsonData);
+        };
+        // initializa the bindings
+        ko.applyBindings(product);
+    });
+</script>
